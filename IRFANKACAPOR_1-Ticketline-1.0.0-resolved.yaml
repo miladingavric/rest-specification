@@ -1,0 +1,574 @@
+---
+openapi: 3.0.0
+info:
+  title: ticketline-api
+  description: The API for the Ticketline project
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/IRFANKACAPOR_1/Ticketline/1.0.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /events:
+    get:
+      tags:
+      - Events
+      description: Returns the events that match the search parameters.
+      operationId: getEvents
+      parameters:
+      - name: artistFirstName
+        in: query
+        description: First name of the artist
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: artistLastName
+        in: query
+        description: Last name of the artist
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: artistAlias
+        in: query
+        description: Alias or band name of the artist
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: locationName
+        in: query
+        description: Name of the location
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: locationStreet
+        in: query
+        description: Street of the location
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: locationCity
+        in: query
+        description: City of the location
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: locationCountry
+        in: query
+        description: Country of the location
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: locationZip
+        in: query
+        description: Zip code of the location
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: eventName
+        in: query
+        description: Name of the event
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: eventType
+        in: query
+        description: Type of the event
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: eventDuration
+        in: query
+        description: Duration of the event
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: eventContent
+        in: query
+        description: Content of the event
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: eventTime
+        in: query
+        description: Time of the event
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      - name: eventPrice
+        in: query
+        description: Price of the event
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: number
+          format: float
+      - name: eventVenue
+        in: query
+        description: Venue of the event
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: All the events that match the search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+    post:
+      tags:
+      - Events
+      operationId: createEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        "200":
+          description: Successfully created event
+  /events/{eventId}/seating-chart:
+    get:
+      tags:
+      - Events
+      description: Returns a graphical representation of the seating chart for a specific event.
+      operationId: getSeatingChart
+      parameters:
+      - name: eventId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Seating chart for the event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatingChart'
+  /events/{eventId}/sectors:
+    get:
+      tags:
+      - Events
+      description: Returns the sectors for a specific event.
+      operationId: getSectors
+      parameters:
+      - name: eventId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Sectors for the event
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sector'
+  /events/{eventId}/tickets/purchase:
+    post:
+      tags:
+      - Tickets
+      description: Purchases tickets for a specific event.
+      operationId: purchaseTickets
+      parameters:
+      - name: eventId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketPurchase'
+      responses:
+        "200":
+          description: Successfully purchased tickets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+  /events/{eventId}/tickets/reserve:
+    post:
+      tags:
+      - Tickets
+      description: Reserves tickets for a specific event.
+      operationId: reserveTickets
+      parameters:
+      - name: eventId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketReservation'
+      responses:
+        "200":
+          description: Successfully reserved tickets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+  /users/{userId}/orders:
+    get:
+      tags:
+      - Users
+      description: Returns an overview of all purchased and reserved tickets for a specific user.
+      operationId: getOrderOverview
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Order overview for the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+  /users/{userId}/reservations/{reservationId}/cancel:
+    post:
+      tags:
+      - Users
+      description: Cancels a ticket reservation for a specific user.
+      operationId: cancelReservation
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: reservationId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully cancelled reservation
+  /users/{userId}/reservations/{reservationId}/purchase:
+    post:
+      tags:
+      - Users
+      description: Purchases reserved tickets for a specific user.
+      operationId: purchaseReservedTickets
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: reservationId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully purchased reserved tickets
+  /users/{userId}/orders/{orderId}/cancel:
+    post:
+      tags:
+      - Users
+      description: Cancels purchased tickets for a specific user.
+      operationId: cancelOrder
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: orderId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully cancelled order
+  /users/register:
+    post:
+      tags:
+      - Users
+      description: Registers a new user.
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        "200":
+          description: Successfully registered user
+  /users/login:
+    post:
+      tags:
+      - Users
+      description: Logs in a user.
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        "200":
+          description: Successfully logged in
+  /users/logout:
+    post:
+      tags:
+      - Users
+      description: Logs out a user.
+      operationId: logoutUser
+      responses:
+        "200":
+          description: Successfully logged out
+  /users/{userId}/unlock:
+    post:
+      tags:
+      - Users
+      description: Unlocks a user account.
+      operationId: unlockUser
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully unlocked user
+  /news:
+    get:
+      tags:
+      - News
+      description: Returns the latest news.
+      operationId: getNews
+      responses:
+        "200":
+          description: Latest news
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/News'
+    post:
+      tags:
+      - News
+      description: Creates a new news item.
+      operationId: createNews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/News'
+      responses:
+        "200":
+          description: Successfully created news
+  /news/{newsId}:
+    get:
+      tags:
+      - News
+      description: Returns the details of a news item.
+      operationId: getNewsDetail
+      parameters:
+      - name: newsId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: News detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/News'
+  /news/old:
+    get:
+      tags:
+      - News
+      description: Returns old news items.
+      operationId: getOldNews
+      responses:
+        "200":
+          description: Old news
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/News'
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        artist:
+          type: string
+        location:
+          type: string
+        time:
+          type: string
+          format: date-time
+    SeatingChart:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        layout:
+          type: string
+    Sector:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+        priceCategory:
+          type: string
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        event:
+          $ref: '#/components/schemas/Event'
+        sector:
+          $ref: '#/components/schemas/Sector'
+    TicketPurchase:
+      type: object
+      properties:
+        ticket:
+          $ref: '#/components/schemas/Ticket'
+        quantity:
+          type: integer
+          format: int32
+    TicketReservation:
+      type: object
+      properties:
+        ticket:
+          $ref: '#/components/schemas/Ticket'
+        quantity:
+          type: integer
+          format: int32
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ticket'
+    UserRegistration:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    News:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        date:
+          type: string
+          format: date-time
+        summary:
+          type: string
+        content:
+          type: string
